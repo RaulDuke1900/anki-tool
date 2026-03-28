@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.cli_state import AppState
-from app.cli_helpers import get_note_field_value
+from app.cli.state import AppState
+from app.cli.helpers import get_note_field_value
 from app.config import settings
 from app.text_cleaner import clean_text_for_tts
 from app.services.anki_connect import AnkiConnectError, update_note_fields

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.cli_state import AppState, MenuCommand
+from app.cli.state import AppState, MenuCommand
 
 
 def print_menu(state: AppState, commands: list[MenuCommand]) -> None:
