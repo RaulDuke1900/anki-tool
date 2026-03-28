@@ -395,4 +395,10 @@ def handle_not_implemented(state: AppState) -> None:
     print("Функция пока не реализована.")
 
 def handle_audio_menu(state: AppState) -> None:
-    print("Меню аудио пока не реализовано.")    
+    from app.cli import build_audio_menu_commands, run_submenu
+
+    run_submenu(
+        state=state,
+        title="Аудио",
+        commands=build_audio_menu_commands(),
+    )  
