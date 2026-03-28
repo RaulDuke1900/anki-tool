@@ -161,10 +161,10 @@ def handle_select_tts_fields(state: AppState) -> None:
     if audio_field_en is None:
         return
 
-    state.source_field_de = source_field_de
-    state.source_field_en = source_field_en
-    state.audio_field_de = audio_field_de
-    state.audio_field_en = audio_field_en
+    state.audio_config.source_field_de = source_field_de
+    state.audio_config.source_field_en = source_field_en
+    state.audio_config.audio_field_de = audio_field_de
+    state.audio_config.audio_field_en = audio_field_en
 
     print("\nПоля для TTS сохранены:")
     print(f"DE source: {state.source_field_de}")
@@ -294,7 +294,7 @@ def handle_write_test_audio_to_first_note(state: AppState) -> None:
         print(f"В колоде '{state.selected_deck}' заметки не найдены.")
         return
 
-    result = process_note_audio(note, state)
+    result = process_note_audio(note, state.audio_config)
     print(f"\nWrite test audio to first note: note_id={result['note_id']}")
 
     if result["updated_fields"]:
@@ -355,7 +355,7 @@ def handle_generate_audio_for_all_notes(state: AppState) -> None:
             total_notes += 1
             continue
 
-        result = process_note_audio(notes[0], state)
+        result = process_note_audio(notes[0], state.audio_config)
         total_notes += 1
 
         if result["errors"]:

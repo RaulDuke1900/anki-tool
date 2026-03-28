@@ -1,72 +1,40 @@
 from __future__ import annotations
 
-from typing import Any
+from dataclasses import dataclass, field
+from typing import Callable
 
-from app.cli.state import AppState
-from app.cli.helpers import get_note_field_value
-from app.config import settings
-from app.text_cleaner import clean_text_for_tts
-from app.services.anki_connect import AnkiConnectError, update_note_fields
-from app.services.anki_media import AnkiMediaError, store_media_file
-from app.services.tts_service import TTSServiceError, generate_tts_audio
+from app.models import AudioConfig
 
 
-def process_note_audio(note: dict[str, Any], state: AppState) -> dict[str, Any]:
-    note_id = note.get("noteId")
-    if not isinstance(note_id, int):
-        return {
-            "note_id": "unknown",
-            "updated_fields": {},
-            "skipped": [],
-            "errors": ["Некорректный note_id."],
-        }
+@dataclass
+class AppState:
+    selected_deck: str | None = None
+    audio_config: AudioConfig = field(default_factory=AudioConfig)
 
-    updated_fields: dict[str, str] = {}
-    errors: list[str] = []
-    skipped: list[str] = []
+    # Shortcuts для удобства в handlers
+    @property
+    def source_field_de(self) -> str | None:
+        return self.audio_config.source_field_de
 
-    if state.source_field_de and state.audio_field_de:
-        de_text = clean_text_for_tts(get_note_field_value(note, state.source_field_de))
-        current_de_audio = get_note_field_value(note, state.audio_field_de)
+    @property
+    def source_field_en(self) -> str | None:
+        return self.audio_config.source_field_en
 
-        if not de_text:
-            skipped.append("DE empty source")
-        elif current_de_audio and not state.overwrite_audio:
-            skipped.append("DE audio exists")
-        else:
-            try:
-                de_path = generate_tts_audio(de_text, settings.tts_de_voice)
-                de_filename = store_media_file(de_path)
-                updated_fields[state.audio_field_de] = f"[sound:{de_filename}]"
-            except (TTSServiceError, AnkiMediaError) as error:
-                errors.append(f"DE: {error}")
+    @property
+    def audio_field_de(self) -> str | None:
+        return self.audio_config.audio_field_de
 
-    if state.source_field_en and state.audio_field_en:
-        en_text = clean_text_for_tts(get_note_field_value(note, state.source_field_en))
-        current_en_audio = get_note_field_value(note, state.audio_field_en)
+    @property
+    def audio_field_en(self) -> str | None:
+        return self.audio_config.audio_field_en
 
-        if not en_text:
-            skipped.append("EN empty source")
-        elif current_en_audio and not state.overwrite_audio:
-            skipped.append("EN audio exists")
-        else:
-            try:
-                en_path = generate_tts_audio(en_text, settings.tts_en_voice)
-                en_filename = store_media_file(en_path)
-                updated_fields[state.audio_field_en] = f"[sound:{en_filename}]"
-            except (TTSServiceError, AnkiMediaError) as error:
-                errors.append(f"EN: {error}")
+    @property
+    def overwrite_audio(self) -> bool:
+        return self.audio_config.overwrite_audio
 
-    if updated_fields:
-        try:
-            update_note_fields(note_id, updated_fields)
-        except AnkiConnectError as error:
-            errors.append(f"updateNoteFields: {error}")
-            updated_fields = {}
 
-    return {
-        "note_id": note_id,
-        "updated_fields": updated_fields,
-        "errors": errors,
-        "skipped": skipped,
-    }
+@dataclass(frozen=True)
+class MenuCommand:
+    key: str
+    title: str
+    handler: Callable[[AppState], None]
