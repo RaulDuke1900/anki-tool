@@ -33,6 +33,31 @@ def build_menu_commands() -> list[MenuCommand]:
                 handler=handle_not_implemented),
     ]
 
+def run_submenu(
+    state: AppState,
+    title: str,
+    commands: list[MenuCommand],
+) -> None:
+    command_map = {command.key: command for command in commands}
+
+    while True:
+        print(f"\n=== {title} ===")
+        for command in commands:
+            print(f"{command.key}. {command.title}")
+        print("0. Назад")
+
+        choice = input("\nВыбери действие: ").strip()
+
+        if choice == "0":
+            break
+
+        command = command_map.get(choice)
+        if command is None:
+            print("Неизвестная команда. Попробуй ещё раз.")
+            continue
+
+        print("---------------")
+        command.handler(state)
 
 def run_cli() -> None:
     state = AppState()
