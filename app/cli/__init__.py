@@ -13,6 +13,7 @@ from app.cli.handlers import (
     handle_generate_test_tts,
     handle_write_test_audio_to_first_note,
     handle_generate_audio_for_all_notes,
+    handle_toggle_language_mode,
 )
 
 
@@ -28,15 +29,17 @@ def build_menu_commands() -> list[MenuCommand]:
                     handler=handle_show_notes_from_selected_deck),
         MenuCommand(key="5",  title="Показать структуру первой заметки",    
                     handler=handle_show_note_structure),
-        MenuCommand(key="6",  title="Настроить поля для TTS",              
-                    handler=handle_select_tts_fields),
-        MenuCommand(key="7",  title="Preview TTS data",                     
+       MenuCommand(key="6",  title="Настроить поля для TTS",              
+                handler=handle_select_tts_fields),
+        MenuCommand(key="7",  title="Toggle language mode (both/de/en)",
+                    handler=handle_toggle_language_mode),
+        MenuCommand(key="8",  title="Preview TTS data",                     
                     handler=handle_preview_tts_data),
-        MenuCommand(key="8",  title="Generate test TTS",                    
+        MenuCommand(key="9",  title="Generate test TTS",                    
                     handler=handle_generate_test_tts),
-        MenuCommand(key="9",  title="Write test audio to first note",       
+        MenuCommand(key="10", title="Write test audio to first note",       
                     handler=handle_write_test_audio_to_first_note),
-        MenuCommand(key="10", title="Generate audio for ALL notes",         
+        MenuCommand(key="11", title="Generate audio for ALL notes",         
                     handler=handle_generate_audio_for_all_notes),
     ]
 
