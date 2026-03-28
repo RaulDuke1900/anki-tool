@@ -378,3 +378,15 @@ def handle_generate_audio_for_all_notes(state: AppState) -> None:
     print(f"Обновлено: {updated_notes}")
     print(f"Пропущено: {skipped_notes}")
     print(f"С ошибками: {error_notes}")
+
+def handle_toggle_language_mode(state: AppState) -> None:
+    current = state.audio_config.language_mode
+
+    if current == "both":
+        state.audio_config.language_mode = "de"
+    elif current == "de":
+        state.audio_config.language_mode = "en"
+    else:
+        state.audio_config.language_mode = "both"
+
+    print(f"Language mode: {state.audio_config.language_mode}")
