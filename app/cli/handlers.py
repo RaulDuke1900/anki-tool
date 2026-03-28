@@ -390,3 +390,9 @@ def handle_toggle_language_mode(state: AppState) -> None:
         state.audio_config.language_mode = "both"
 
     print(f"Language mode: {state.audio_config.language_mode}")
+
+def handle_not_implemented(state: AppState) -> None:
+    print("Функция пока не реализована.")
+
+def handle_audio_menu(state: AppState) -> None:
+    print("Меню аудио пока не реализовано.")    
