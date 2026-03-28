@@ -395,10 +395,20 @@ def handle_not_implemented(state: AppState) -> None:
     print("Функция пока не реализована.")
 
 def handle_audio_menu(state: AppState) -> None:
+    if not require_selected_deck(state):
+        return
+
     from app.cli import build_audio_menu_commands, run_submenu
 
     run_submenu(
         state=state,
         title="Аудио",
         commands=build_audio_menu_commands(),
-    )  
+    )
+
+def require_selected_deck(state: AppState) -> bool:
+    if state.selected_deck:
+        return True
+
+    print("Сначала выберите колоду.")
+    return False
