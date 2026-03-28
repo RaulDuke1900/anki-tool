@@ -31,6 +31,22 @@ class AppState:
     @property
     def overwrite_audio(self) -> bool:
         return self.audio_config.overwrite_audio
+    
+    @property
+    def dry_run(self) -> bool:
+        return self.audio_config.dry_run
+
+    @property
+    def language_mode(self) -> str:
+        return self.audio_config.language_mode
+
+    @property
+    def de_voice(self) -> str | None:
+        return self.audio_config.de_voice
+
+    @property
+    def en_voice(self) -> str | None:
+        return self.audio_config.en_voice
 
 
 @dataclass(frozen=True)
